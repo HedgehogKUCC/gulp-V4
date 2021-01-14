@@ -1,6 +1,8 @@
 const { src, dest, task, watch, series, parallel } = require('gulp');
 const gulpSass = require('gulp-sass');
 
+// https://gulpjs.com/docs/en/api/task
+// Reminder: This API isn't the recommended pattern anymore - export your tasks.
 task('copyHTML', (cb) => {
   src('./src/**/*.html')
     .pipe(dest('./dist/'));
