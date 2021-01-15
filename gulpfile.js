@@ -1,8 +1,10 @@
 const { src, dest, task, watch, series, parallel } = require('gulp');
-const gulpSass = require('gulp-sass');
-const postcss = require('gulp-postcss');
+// 使用 gulp-load-plugins 後，gulp-* 的套件就可以由 gulp-load-plugins 引入
+// const gulpSass = require('gulp-sass');
+// const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
+const $ = require('gulp-load-plugins')();
 
 // https://gulpjs.com/docs/en/api/task
 // Reminder: This API isn't the recommended pattern anymore - export your tasks.
@@ -14,8 +16,8 @@ task('copyHTML', (cb) => {
 
 function sass() {
   return src('./src/scss/**/*.scss')
-    .pipe(gulpSass().on('error', gulpSass.logError))
-    .pipe(postcss([ autoprefixer(), cssnano() ]))
+    .pipe($.sass().on('error', $.sass.logError))
+    .pipe($.postcss([ autoprefixer(), cssnano() ]))
     .pipe(dest('./dist/css'));
 }
 
