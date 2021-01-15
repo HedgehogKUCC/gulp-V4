@@ -1,4 +1,6 @@
-const { src, dest, task, watch, series, parallel } = require('gulp');
+import { src, dest, task, watch, series, parallel } from 'gulp';
+// const { src, dest, task, watch, series, parallel } = require('gulp');
+
 // 使用 gulp-load-plugins 後，gulp-* 的套件就可以由 gulp-load-plugins 引入
 // const gulpSass = require('gulp-sass');
 // const postcss = require('gulp-postcss');
