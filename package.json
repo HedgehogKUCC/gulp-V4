@@ -20,6 +20,6 @@
   "browserslist": [
     "last 3 versions",
     "> 5%",
-    "ie 6-8"
+    "ie 10"
   ]
 }
