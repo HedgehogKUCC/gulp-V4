@@ -9,8 +9,16 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "autoprefixer": "10.2.1",
     "gulp": "4.0.2",
-    "gulp-sass": "4.1.0"
+    "gulp-postcss": "9.0.0",
+    "gulp-sass": "4.1.0",
+    "postcss": "8.2.4"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "browserslist": [
+    "last 3 versions",
+    "> 5%",
+    "ie 6-8"
+  ]
 }
