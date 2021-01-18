@@ -12,6 +12,7 @@ import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import gulpLoadPlugins from 'gulp-load-plugins';
 const $ = gulpLoadPlugins();
+import del from 'del';
 
 const paths = {
   styles: {
@@ -24,6 +25,10 @@ const paths = {
     plugin: 'src/js/plugins/**/*.js',
     dest: 'dist/js'
   }
+}
+
+export function clean() {
+  return del(['dist']);
 }
 
 // https://gulpjs.com/docs/en/api/task
@@ -80,6 +85,6 @@ function watchFiles(cb) {
 
 export { watchFiles as watch };
 
-const build = series(parallel(style, stylePlugin, script, scriptPlugin));
+const build = series(clean, parallel(style, stylePlugin, script, scriptPlugin));
 
 export default build;
