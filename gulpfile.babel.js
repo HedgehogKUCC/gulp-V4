@@ -46,7 +46,7 @@ export function stylePlugin() {
   return src(paths.styles.plugin)
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
-    .pipe($.concat('chunk-vendors.css'))
+    .pipe($.concat('chunk-vendors.css', { newLine: '' }))
     .pipe(dest(paths.styles.dest));
 }
 
