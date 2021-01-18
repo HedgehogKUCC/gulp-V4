@@ -17,6 +17,10 @@ const paths = {
   styles: {
     src: 'src/scss/**/*.scss',
     dest: 'dist/css'
+  },
+  scripts: {
+    src: 'src/js/**/*.js',
+    dest: 'dist/js'
   }
 }
 
@@ -35,12 +39,20 @@ export function sass() {
     .pipe(dest(paths.styles.dest));
 }
 
-function watchFiles() {
-  return watch('src/scss/**/*.scss', series(sass));
+export function babel() {
+  return src(paths.scripts.src)
+    .pipe($.babel({ presets: ['@babel/env'] }))
+    .pipe(dest(paths.scripts.dest));
+}
+
+function watchFiles(cb) {
+  watch(paths.styles.src, series(sass));
+  watch(paths.scripts.src, series(babel));
+  cb();
 }
 
 export { watchFiles as watch };
 
-const build = series(parallel(sass));
+const build = series(parallel(sass, babel));
 
 export default build;
