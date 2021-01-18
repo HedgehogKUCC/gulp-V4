@@ -15,11 +15,13 @@ const $ = gulpLoadPlugins();
 
 const paths = {
   styles: {
-    src: 'src/scss/**/*.scss',
+    src: 'src/scss/*.scss',
+    plugin: 'src/scss/plugins/**/*.scss',
     dest: 'dist/css'
   },
   scripts: {
-    src: 'src/js/**/*.js',
+    src: 'src/js/*.js',
+    plugin: 'src/js/plugins/**/*.js',
     dest: 'dist/js'
   }
 }
@@ -36,12 +38,29 @@ export function sass() {
   return src(paths.styles.src)
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
+    .pipe($.concat('all.css'))
+    .pipe(dest(paths.styles.dest));
+}
+
+export function stylePlugin() {
+  return src(paths.styles.plugin)
+    .pipe($.sass().on('error', $.sass.logError))
+    .pipe($.postcss([ autoprefixer(), cssnano() ]))
+    .pipe($.concat('chunk-vendors.css'))
     .pipe(dest(paths.styles.dest));
 }
 
 export function babel() {
   return src(paths.scripts.src)
     .pipe($.babel({ presets: ['@babel/env'] }))
+    .pipe($.concat('all.js'))
+    .pipe(dest(paths.scripts.dest));
+}
+
+export function scriptPlugin() {
+  return src(paths.scripts.plugin)
+    .pipe($.babel({ presets: ['@babel/env'] }))
+    .pipe($.concat('chunk-vendors.js'))
     .pipe(dest(paths.scripts.dest));
 }
 
@@ -53,6 +72,6 @@ function watchFiles(cb) {
 
 export { watchFiles as watch };
 
-const build = series(parallel(sass, babel));
+const build = series(parallel(sass, stylePlugin, babel, scriptPlugin));
 
 export default build;
