@@ -36,31 +36,39 @@ task('copyHTML', (cb) => {
 
 export function style() {
   return src(paths.styles.src)
+    .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
     .pipe($.concat('all.css'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.styles.dest));
 }
 
 export function stylePlugin() {
   return src(paths.styles.plugin)
+    .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
     .pipe($.concat('chunk-vendors.css', { newLine: '' }))
+    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.styles.dest));
 }
 
 export function script() {
   return src(paths.scripts.src)
+    .pipe($.sourcemaps.init())
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('all.js'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.scripts.dest));
 }
 
 export function scriptPlugin() {
   return src(paths.scripts.plugin)
+    .pipe($.sourcemaps.init())
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('chunk-vendors.js'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.scripts.dest));
 }
 
