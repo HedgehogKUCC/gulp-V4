@@ -34,7 +34,7 @@ task('copyHTML', (cb) => {
   cb();
 });
 
-export function sass() {
+export function style() {
   return src(paths.styles.src)
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
@@ -50,7 +50,7 @@ export function stylePlugin() {
     .pipe(dest(paths.styles.dest));
 }
 
-export function babel() {
+export function script() {
   return src(paths.scripts.src)
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('all.js'))
@@ -72,6 +72,6 @@ function watchFiles(cb) {
 
 export { watchFiles as watch };
 
-const build = series(parallel(sass, stylePlugin, babel, scriptPlugin));
+const build = series(parallel(style, stylePlugin, script, scriptPlugin));
 
 export default build;
