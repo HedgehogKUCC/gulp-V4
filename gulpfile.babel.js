@@ -33,11 +33,16 @@ export function clean() {
 
 // https://gulpjs.com/docs/en/api/task
 // Reminder: This API isn't the recommended pattern anymore - export your tasks.
-task('copyHTML', (cb) => {
-  src('src/**/*.html')
+// task('copyHTML', (cb) => {
+//   src('src/**/*.html')
+//     .pipe(dest('./dist/'));
+//   cb();
+// });
+
+export function copyHTML() {
+  return src('src/**/*.html')
     .pipe(dest('./dist/'));
-  cb();
-});
+}
 
 export function style() {
   return src(paths.styles.src)
@@ -50,7 +55,10 @@ export function style() {
 }
 
 export function stylePlugin() {
-  return src(paths.styles.plugin)
+  return src([
+    'node_modules/bootstrap/dist/css/bootstrap.min.css',
+    paths.styles.plugin,
+  ])
     .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
     .pipe($.postcss([ autoprefixer(), cssnano() ]))
@@ -69,7 +77,11 @@ export function script() {
 }
 
 export function scriptPlugin() {
-  return src(paths.scripts.plugin)
+  return src([
+    'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+    paths.scripts.plugin,
+  ])
     .pipe($.sourcemaps.init())
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('chunk-vendors.js'))
@@ -85,6 +97,6 @@ function watchFiles(cb) {
 
 export { watchFiles as watch };
 
-const build = series(clean, parallel(style, stylePlugin, script, scriptPlugin));
+const build = series(clean, parallel(copyHTML, style, stylePlugin, script, scriptPlugin));
 
 export default build;

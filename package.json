@@ -24,7 +24,11 @@
     "gulp-sourcemaps": "3.0.0",
     "postcss": "8.2.4"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap": "4.4.1",
+    "jquery": "3.5.1",
+    "popper.js": "1.16.1"
+  },
   "browserslist": [
     "last 3 versions",
     "> 5%",
