@@ -17,12 +17,10 @@ import del from 'del';
 const paths = {
   styles: {
     src: 'src/scss/*.scss',
-    plugin: 'src/scss/plugins/**/*.scss',
     dest: 'dist/css'
   },
   scripts: {
     src: 'src/js/*.js',
-    plugin: 'src/js/plugins/**/*.js',
     dest: 'dist/js'
   }
 }
@@ -57,13 +55,8 @@ export function style() {
 export function stylePlugin() {
   return src([
     'node_modules/bootstrap/dist/css/bootstrap.min.css',
-    paths.styles.plugin,
   ])
-    .pipe($.sourcemaps.init())
-    .pipe($.sass().on('error', $.sass.logError))
-    .pipe($.postcss([ autoprefixer(), cssnano() ]))
     .pipe($.concat('chunk-vendors.css', { newLine: '' }))
-    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.styles.dest));
 }
 
@@ -79,13 +72,10 @@ export function script() {
 export function scriptPlugin() {
   return src([
     'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/popper.js/dist/popper.min.js',
     'node_modules/bootstrap/dist/js/bootstrap.min.js',
-    paths.scripts.plugin,
   ])
-    .pipe($.sourcemaps.init())
-    .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('chunk-vendors.js'))
-    .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.scripts.dest));
 }
 
