@@ -57,6 +57,7 @@ export function stylePlugin() {
     'node_modules/bootstrap/dist/css/bootstrap.min.css',
   ])
     .pipe($.concat('chunk-vendors.css', { newLine: '' }))
+    .pipe($.cleanCss({ level: { 1: { specialComments: 0 } }}))
     .pipe(dest(paths.styles.dest));
 }
 
