@@ -66,6 +66,7 @@ export function script() {
     .pipe($.sourcemaps.init())
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('all.js'))
+    .pipe($.uglify({ compress: { drop_console: true } }))
     .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.scripts.dest));
 }
