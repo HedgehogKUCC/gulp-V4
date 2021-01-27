@@ -1,5 +1,4 @@
-let newFun1 = () => {
-  console.log('a');
-}
+const newFun1 = () => {
+};
 
 newFun1();

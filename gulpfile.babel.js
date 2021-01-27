@@ -1,4 +1,4 @@
-import { src, dest, task, watch, series, parallel } from 'gulp';
+import { src, dest, watch, series, parallel } from 'gulp';
 // const { src, dest, task, watch, series, parallel } = require('gulp');
 
 // 使用 gulp-load-plugins 後，gulp-* 的套件就可以由 gulp-load-plugins 引入
@@ -11,19 +11,20 @@ import { src, dest, task, watch, series, parallel } from 'gulp';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import gulpLoadPlugins from 'gulp-load-plugins';
-const $ = gulpLoadPlugins();
 import del from 'del';
+
+const $ = gulpLoadPlugins();
 
 const paths = {
   styles: {
     src: 'src/scss/*.scss',
-    dest: 'dist/css'
+    dest: 'dist/css',
   },
   scripts: {
     src: 'src/js/*.js',
-    dest: 'dist/js'
-  }
-}
+    dest: 'dist/js',
+  },
+};
 
 export function clean() {
   return del(['dist']);
@@ -46,7 +47,7 @@ export function style() {
   return src(paths.styles.src)
     .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
-    .pipe($.postcss([ autoprefixer(), cssnano() ]))
+    .pipe($.postcss([autoprefixer(), cssnano()]))
     .pipe($.concat('all.css'))
     .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.styles.dest));
@@ -57,7 +58,7 @@ export function stylePlugin() {
     'node_modules/bootstrap/dist/css/bootstrap.min.css',
   ])
     .pipe($.concat('chunk-vendors.css', { newLine: '' }))
-    .pipe($.cleanCss({ level: { 1: { specialComments: 0 } }}))
+    .pipe($.cleanCss({ level: { 1: { specialComments: 0 } } }))
     .pipe(dest(paths.styles.dest));
 }
 
@@ -82,8 +83,8 @@ export function scriptPlugin() {
 }
 
 function watchFiles(cb) {
-  watch(paths.styles.src, series(sass));
-  watch(paths.scripts.src, series(babel));
+  watch(paths.styles.src, series(style));
+  watch(paths.scripts.src, series(script));
   cb();
 }
 

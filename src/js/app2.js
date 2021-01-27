@@ -1,5 +1,5 @@
-let newFun2 = () => {
-  console.log('b');
-}
+const newFun2 = () => {
+  debugger;
+};
 
 newFun2();
