@@ -12,8 +12,10 @@ import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
+import browserSync from 'browser-sync';
 
 const $ = gulpLoadPlugins();
+const browser = browserSync.create();
 
 const paths = {
   styles: {
@@ -40,7 +42,8 @@ export function clean() {
 
 export function copyHTML() {
   return src('src/**/*.html')
-    .pipe(dest('./dist/'));
+    .pipe(dest('./dist'))
+    .pipe(browser.stream());
 }
 
 export function style() {
@@ -50,7 +53,8 @@ export function style() {
     .pipe($.postcss([autoprefixer(), cssnano()]))
     .pipe($.concat('all.css'))
     .pipe($.sourcemaps.write('.'))
-    .pipe(dest(paths.styles.dest));
+    .pipe(dest(paths.styles.dest))
+    .pipe(browser.stream());
 }
 
 export function stylePlugin() {
@@ -69,7 +73,8 @@ export function script() {
     .pipe($.concat('all.js'))
     .pipe($.uglify({ compress: { drop_console: true } }))
     .pipe($.sourcemaps.write('.'))
-    .pipe(dest(paths.scripts.dest));
+    .pipe(dest(paths.scripts.dest))
+    .pipe(browser.stream());
 }
 
 export function scriptPlugin() {
@@ -88,8 +93,22 @@ function watchFiles(cb) {
   cb();
 }
 
+export function openBrowser(cb) {
+  browser.init({
+    server: {
+      baseDir: './dist',
+    },
+    reloadDebounce: 1000,
+  });
+
+  watch(paths.styles.src, series(style));
+  watch(paths.scripts.src, series(script));
+  watch('./src/index.html', series(copyHTML));
+  cb();
+}
+
 export { watchFiles as watch };
 
-const build = series(clean, parallel(copyHTML, style, stylePlugin, script, scriptPlugin));
+const build = series(clean, parallel(copyHTML, style, stylePlugin, script, scriptPlugin), openBrowser);
 
 export default build;
