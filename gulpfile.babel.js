@@ -18,6 +18,11 @@ const $ = gulpLoadPlugins();
 const browser = browserSync.create();
 
 const paths = {
+  ejs: {
+    src: 'src/templates/**/*.ejs',
+    temp: '!src/templates/**/_*.ejs',
+    dest: 'dist',
+  },
   styles: {
     src: 'src/scss/*.scss',
     dest: 'dist/css',
@@ -43,6 +48,16 @@ export function clean() {
 export function copyHTML() {
   return src('src/**/*.html')
     .pipe(dest('./dist'))
+    .pipe(browser.stream());
+}
+
+export function ejs() {
+  return src([paths.ejs.src, paths.ejs.temp])
+    .pipe($.ejs({
+      msg: 'Hello EJS！',
+    }))
+    .pipe($.rename({ extname: '.html' }))
+    .pipe(dest(paths.ejs.dest))
     .pipe(browser.stream());
 }
 
@@ -103,12 +118,12 @@ export function openBrowser(cb) {
 
   watch(paths.styles.src, series(style));
   watch(paths.scripts.src, series(script));
-  watch('./src/index.html', series(copyHTML));
+  watch(paths.ejs.src, series(ejs));
   cb();
 }
 
 export { watchFiles as watch };
 
-const build = series(clean, parallel(copyHTML, style, stylePlugin, script, scriptPlugin), openBrowser);
+const build = series(clean, parallel(ejs, style, stylePlugin, script, scriptPlugin), openBrowser);
 
 export default build;
