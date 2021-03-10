@@ -1,5 +1,7 @@
-$primary-color: red;
+@import "../../node_modules/bootstrap/scss/functions";
+@import "./helps/variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 body {
-  color: $primary-color;
+  color: $primary;
 }

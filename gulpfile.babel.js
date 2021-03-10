@@ -25,7 +25,7 @@ const paths = {
     dest: 'dist',
   },
   styles: {
-    src: 'src/scss/*.scss',
+    src: 'src/scss/**/*.scss',
     dest: 'dist/css',
   },
   scripts: {
@@ -81,14 +81,15 @@ export function style() {
     .pipe(browser.stream());
 }
 
-export function stylePlugin() {
-  return src([
-    'node_modules/bootstrap/dist/css/bootstrap.min.css',
-  ])
-    .pipe($.concat('chunk-vendors.css', { newLine: '' }))
-    .pipe($.cleanCss({ level: { 1: { specialComments: 0 } } }))
-    .pipe(dest(paths.styles.dest));
-}
+// 改用 客製化 .scss，在 all.scss 裡面 @import 所需
+// export function stylePlugin() {
+//   return src([
+//     'node_modules/bootstrap/dist/css/bootstrap.min.css',
+//   ])
+//     .pipe($.concat('chunk-vendors.css', { newLine: '' }))
+//     .pipe($.cleanCss({ level: { 1: { specialComments: 0 } } }))
+//     .pipe(dest(paths.styles.dest));
+// }
 
 export function script() {
   return src(paths.scripts.src)
@@ -134,6 +135,6 @@ export function openBrowser(cb) {
 
 export { watchFiles as watch };
 
-const build = series(clean, parallel(ejs, style, stylePlugin, script, scriptPlugin), openBrowser);
+const build = series(clean, parallel(ejs, style, script, scriptPlugin), openBrowser);
 
 export default build;
