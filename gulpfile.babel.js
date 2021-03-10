@@ -13,6 +13,7 @@ import cssnano from 'cssnano';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
 import browserSync from 'browser-sync';
+import minimist from 'minimist';
 
 const $ = gulpLoadPlugins();
 const browser = browserSync.create();
@@ -32,6 +33,13 @@ const paths = {
     dest: 'dist/js',
   },
 };
+
+const envOptions = {
+  string: 'env',
+  default: { env: 'develop' },
+};
+
+const options = minimist(process.argv.slice(2), envOptions);
 
 export function clean() {
   return del(['dist']);
@@ -65,7 +73,8 @@ export function style() {
   return src(paths.styles.src)
     .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
-    .pipe($.postcss([autoprefixer(), cssnano()]))
+    // .pipe($.postcss([autoprefixer(), cssnano()]))
+    .pipe($.if(options.env === 'production', $.postcss([autoprefixer(), cssnano()])))
     .pipe($.concat('all.css'))
     .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.styles.dest))
@@ -86,7 +95,8 @@ export function script() {
     .pipe($.sourcemaps.init())
     .pipe($.babel({ presets: ['@babel/env'] }))
     .pipe($.concat('all.js'))
-    .pipe($.uglify({ compress: { drop_console: true } }))
+    // .pipe($.uglify({ compress: { drop_console: true } }))
+    .pipe($.if(options.env === 'production', $.uglify({ compress: { drop_console: true } })))
     .pipe($.sourcemaps.write('.'))
     .pipe(dest(paths.scripts.dest))
     .pipe(browser.stream());
