@@ -106,8 +106,8 @@ export function script() {
 export function scriptPlugin() {
   return src([
     'node_modules/jquery/dist/jquery.min.js',
-    'node_modules/popper.js/dist/popper.min.js',
-    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+    'src/js/plugins/popper.min.js',
+    'src/js/plugins/bootstrap.min.js',
   ])
     .pipe($.concat('chunk-vendors.js'))
     .pipe(dest(paths.scripts.dest));

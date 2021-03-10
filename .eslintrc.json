@@ -10,6 +10,7 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
+    "ignorePatterns": ["dist/js/**/*.js", "src/js/plugins/*.js"],
     "rules": {
         "no-debugger": "off",
         "object-curly-newline": ["error", {
