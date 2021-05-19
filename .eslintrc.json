@@ -18,6 +18,7 @@
         }],
         "max-len": ["error", {
             "code": 110
-        }]
+        }],
+        "indent": ["error", 4]
     }
 }

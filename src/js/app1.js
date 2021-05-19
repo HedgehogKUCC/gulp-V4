@@ -1,4 +1,3 @@
-const newFun1 = () => {
-};
+const newFun1 = () => {};
 
 newFun1();

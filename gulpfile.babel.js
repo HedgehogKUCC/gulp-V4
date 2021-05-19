@@ -19,30 +19,30 @@ const $ = gulpLoadPlugins();
 const browser = browserSync.create();
 
 const paths = {
-  ejs: {
-    src: 'src/templates/**/*.ejs',
-    temp: '!src/templates/**/_*.ejs',
-    dest: 'dist',
-  },
-  styles: {
-    src: 'src/scss/**/*.scss',
-    dest: 'dist/css',
-  },
-  scripts: {
-    src: 'src/js/*.js',
-    dest: 'dist/js',
-  },
+    ejs: {
+        src: 'src/templates/**/*.ejs',
+        temp: '!src/templates/**/_*.ejs',
+        dest: 'dist',
+    },
+    styles: {
+        src: 'src/scss/**/*.scss',
+        dest: 'dist/css',
+    },
+    scripts: {
+        src: 'src/js/*.js',
+        dest: 'dist/js',
+    },
 };
 
 const envOptions = {
-  string: 'env',
-  default: { env: 'develop' },
+    string: 'env',
+    default: { env: 'develop' },
 };
 
 const options = minimist(process.argv.slice(2), envOptions);
 
 export function clean() {
-  return del(['dist']);
+    return del(['dist']);
 }
 
 // https://gulpjs.com/docs/en/api/task
@@ -54,31 +54,31 @@ export function clean() {
 // });
 
 export function copyHTML() {
-  return src('src/**/*.html')
-    .pipe(dest('./dist'))
-    .pipe(browser.stream());
+    return src('src/**/*.html')
+        .pipe(dest('./dist'))
+        .pipe(browser.stream());
 }
 
 export function ejs() {
-  return src([paths.ejs.src, paths.ejs.temp])
-    .pipe($.ejs({
-      msg: 'Hello EJS！',
-    }))
-    .pipe($.rename({ extname: '.html' }))
-    .pipe(dest(paths.ejs.dest))
-    .pipe(browser.stream());
+    return src([paths.ejs.src, paths.ejs.temp])
+        .pipe($.ejs({
+            msg: 'Hello EJS！',
+        }))
+        .pipe($.rename({ extname: '.html' }))
+        .pipe(dest(paths.ejs.dest))
+        .pipe(browser.stream());
 }
 
 export function style() {
-  return src(paths.styles.src)
-    .pipe($.sourcemaps.init())
-    .pipe($.sass().on('error', $.sass.logError))
-    // .pipe($.postcss([autoprefixer(), cssnano()]))
-    .pipe($.if(options.env === 'production', $.postcss([autoprefixer(), cssnano()])))
-    .pipe($.concat('all.css'))
-    .pipe($.sourcemaps.write('.'))
-    .pipe(dest(paths.styles.dest))
-    .pipe(browser.stream());
+    return src(paths.styles.src)
+        .pipe($.sourcemaps.init())
+        .pipe($.sass().on('error', $.sass.logError))
+        // .pipe($.postcss([autoprefixer(), cssnano()]))
+        .pipe($.if(options.env === 'production', $.postcss([autoprefixer(), cssnano()])))
+        .pipe($.concat('all.css'))
+        .pipe($.sourcemaps.write('.'))
+        .pipe(dest(paths.styles.dest))
+        .pipe(browser.stream());
 }
 
 // 改用 客製化 .scss，在 all.scss 裡面 @import 所需
@@ -92,45 +92,44 @@ export function style() {
 // }
 
 export function script() {
-  return src(paths.scripts.src)
-    .pipe($.sourcemaps.init())
-    .pipe($.babel({ presets: ['@babel/env'] }))
-    .pipe($.concat('all.js'))
-    // .pipe($.uglify({ compress: { drop_console: true } }))
-    .pipe($.if(options.env === 'production', $.uglify({ compress: { drop_console: true } })))
-    .pipe($.sourcemaps.write('.'))
-    .pipe(dest(paths.scripts.dest))
-    .pipe(browser.stream());
+    return src(paths.scripts.src)
+        .pipe($.sourcemaps.init())
+        .pipe($.babel({ presets: ['@babel/env'] }))
+        .pipe($.concat('all.js'))
+        // .pipe($.uglify({ compress: { drop_console: true } }))
+        .pipe($.if(options.env === 'production', $.uglify({ compress: { drop_console: true } })))
+        .pipe($.sourcemaps.write('.'))
+        .pipe(dest(paths.scripts.dest))
+        .pipe(browser.stream());
 }
 
 export function scriptPlugin() {
-  return src([
-    'node_modules/jquery/dist/jquery.min.js',
-    'src/js/plugins/popper.min.js',
-    'src/js/plugins/bootstrap.min.js',
-  ])
-    .pipe($.concat('chunk-vendors.js'))
-    .pipe(dest(paths.scripts.dest));
+    return src([
+        'node_modules/jquery/dist/jquery.min.js',
+        'src/js/plugins/popper.min.js',
+        'src/js/plugins/bootstrap.min.js',
+    ])
+        .pipe($.concat('chunk-vendors.js'))
+        .pipe(dest(paths.scripts.dest));
 }
 
 function watchFiles(cb) {
-  watch(paths.styles.src, series(style));
-  watch(paths.scripts.src, series(script));
-  cb();
+    watch(paths.styles.src, series(style));
+    watch(paths.scripts.src, series(script));
+    cb();
 }
 
 export function openBrowser(cb) {
-  browser.init({
-    server: {
-      baseDir: './dist',
-    },
-    reloadDebounce: 1000,
-  });
-
-  watch(paths.styles.src, series(style));
-  watch(paths.scripts.src, series(script));
-  watch(paths.ejs.src, series(ejs));
-  cb();
+    browser.init({
+        server: {
+            baseDir: './dist',
+        },
+        reloadDebounce: 1000,
+    });
+    watch(paths.styles.src, series(style));
+    watch(paths.scripts.src, series(script));
+    watch(paths.ejs.src, series(ejs));
+    cb();
 }
 
 export { watchFiles as watch };

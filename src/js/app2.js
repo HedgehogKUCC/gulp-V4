@@ -1,5 +1,5 @@
 const newFun2 = () => {
-  debugger;
+    debugger;
 };
 
 newFun2();
