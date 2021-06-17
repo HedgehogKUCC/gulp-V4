@@ -36,6 +36,7 @@
             "vertical-align",
             "justify-content",
             "align-items",
+            "flex-wrap",
             "flex-grow",
             "flex-shrink",
             "flex-basis",
