@@ -134,6 +134,8 @@ export function openBrowser(cb) {
 
 export { watchFiles as watch };
 
-const build = series(clean, parallel(ejs, style, script, scriptPlugin), openBrowser);
+const dev = series(clean, parallel(ejs, style, script, scriptPlugin), openBrowser);
 
-export default build;
+export default dev;
+
+exports.build = series(clean, parallel(ejs, style, script, scriptPlugin));
