@@ -1,13 +1,13 @@
 # Gulp
 
-## Dev
+## dev
 
 ```bash
 $ gulp
 ```
 
-## Production
+## build
 
 ```bash
-$ gulp --env production
+$ gulp build --env production
 ```
